@@ -8,24 +8,23 @@ local SAVE_DB_INTERVAL = Init.Convar.Server.SAVE_DB_INTERVAL
 local Query            = {}
 
 
-local function addPlayerInventoryColumn()
-    MySQL.query([[
-        ALTER TABLE users
+local function addPlayerInventoryColumn(table)
+    MySQL.query(string.format([[
+        ALTER TABLE %s
         ADD COLUMN IF NOT EXISTS playerInventory longtext DEFAULT '{}'
-    ]])
+    ]], table))
 end
-
 
 if GetResourceState("LEGACYCORE"):find("start") then
     Query["getInventory"] = 'SELECT playerInventory FROM users WHERE identifier = ? AND charIdentifier = ?'
     Query["updateInventory"] = 'UPDATE users SET playerInventory = ? WHERE identifier = ? AND charIdentifier = ?'
-    addPlayerInventoryColumn()
+    addPlayerInventoryColumn("users")
 elseif GetResourceState("es_extended"):find("start") then
     Query["getInventory"] = 'SELECT playerInventory FROM users WHERE identifier = ?'
     Query["updateInventory"] = 'UPDATE users SET playerInventory = ? WHERE identifier = ?'
-    addPlayerInventoryColumn()
+    addPlayerInventoryColumn("users")
 elseif GetResourceState("qbx_core"):find("start") then
-
+    print("missing Query for qbx_core")
 end
 
 

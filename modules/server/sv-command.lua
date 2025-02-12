@@ -50,3 +50,8 @@ RegisterCommand(Config.inventoryCommand.ConfiscateInv.CommandName, function(sour
         Shared.debugInventory(("Failed to %s inventory for target %d."):format(action, target))
     end
 end, false)
+
+
+Wait(4000)
+
+Inventory.addItem(1, "water", 5)

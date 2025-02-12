@@ -15,3 +15,14 @@ end
 function Framework.getCharId(src)
     return Legacy.DATA:GetPlayerCharSlot(src)
 end
+
+RegisterNetEvent('LegacyCore:PlayerLoaded')
+AddEventHandler('LegacyCore:PlayerLoaded', function(slot, data, newPlayer)
+    Inventory.loadInventory(data.source, true)
+end)
+
+RegisterNetEvent('LegacyCore:PlayerLogout')
+AddEventHandler('LegacyCore:PlayerLogout', function()
+    local playerId = source
+    Inventory.loadInventory(playerId, false)
+end)

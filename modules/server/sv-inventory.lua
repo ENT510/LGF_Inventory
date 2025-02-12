@@ -59,6 +59,9 @@ end
 function Inventory.getInventoryWeight(target)
     if not target then return end
     local inv = Array.getPlayerInv(target)
+    if not inv or #inv == 0 then
+        return 0
+    end
     local totalWeight = 0
     for _, item in ipairs(inv) do
         if item then
@@ -86,7 +89,7 @@ end
 ---@param slot number|nil
 ---@return boolean
 function Inventory.addItem(target, itemName, quantity, metadata, slot)
-    local inv = Array.getPlayerInv(target)
+    local inv = Array.getPlayerInv(target) or {}
 
     local regItems = Shared.getRegisteredItems()
     local data = regItems[itemName]
@@ -350,6 +353,32 @@ function Inventory.transferItem(from_source, to_targetId, itemName, quantity, me
     return true
 end
 
+--- @param target number The player ID whose inventory is being loaded or unloaded
+--- @param load boolean Whether to load or unload the inventory (true to load, false to unload)
+function Inventory.loadInventory(target, load)
+    local playerId = target
+    if load == true then
+        local inventory = Functions.getInventory(playerId)
+
+        SetTimeout(1000, function()
+            TriggerClientEvent("LGF_Inventory:SyncTablePlayer", -1, playerId, inventory)
+            local charId = Framework.getCharId(playerId)
+            CurrentCharId[playerId] = charId
+        end)
+    elseif load == false then
+        if PlayerInventory[playerId] then
+            Functions.updateInventory(playerId, PlayerInventory[playerId])
+        end
+
+        PlayerInventory[playerId] = nil
+        CurrentCharId[playerId] = nil
+        SetTimeout(1000, function()
+            TriggerClientEvent("LGF_Inventory:SyncTablePlayer", -1, playerId, PlayerInventory[playerId] or {})
+        end)
+    end
+end
+
+exports("loadInventory", Inventory.loadInventory)
 exports("transferItem", Inventory.transferItem)
 exports("getItemCount", Inventory.getItemCount)
 exports("getInventoryData", Inventory.getInventoryData)
