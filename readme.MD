@@ -35,7 +35,7 @@ local success = exports.LGF_Inventory:addItem(target, itemName, quantity, metada
 -- @param slot? number|nil Specific slot to remove the item from (optional)
 -- @param metadata? table|nil Additional item metadata (optional)
 -- @return boolean True if the item was removed successfully; false otherwise.
-local success = exports.LGF_Inventory:removeItem(target, itemName, quantity)
+local success = exports.LGF_Inventory:removeItem(target, itemName, quantity, metadata,slot)
 
 --- Retrieves the total weight of a player's inventory.
 -- @param target number The ID of the player.
