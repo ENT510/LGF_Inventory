@@ -1,4 +1,4 @@
-local Framework = {}
+Framework = {}
 local Legacy = GetResourceState('LEGACYCORE'):find('start') and exports.LEGACYCORE:GetCoreData() or nil
 
 
@@ -9,10 +9,9 @@ function Framework.getPlayer(src)
 end
 
 function Framework.getIdentifier(src)
-    local playerData = Framework.getPlayer(src)
-    if playerData then
-        return playerData.ientifier
-    end
+    return GetPlayerIdentifierByType(src, "license")
 end
 
-return Framework
+function Framework.getCharId(src)
+    return Legacy.DATA:GetPlayerCharSlot(src)
+end

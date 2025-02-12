@@ -10,11 +10,16 @@ local Query            = {}
 if GetResourceState("LEGACYCORE"):find("start") then
     Query["getInventory"] = 'SELECT playerInventory FROM users WHERE identifier = ? AND charIdentifier = ?'
     Query["updateInventory"] = 'UPDATE users SET playerInventory = ? WHERE identifier = ? AND charIdentifier = ?'
+elseif GetResourceState("es_extended"):find("start") then
+    Query["getInventory"] = 'SELECT playerInventory FROM users WHERE identifier = ? '
+    Query["updateInventory"] = 'UPDATE users SET playerInventory = ? WHERE identifier = ?'
+elseif GetResourceState("qbx_core"):find("start") then
+
 end
 
 
 function Functions.getInventory(target)
-    local identifier = GetPlayerIdentifierByType(target, "license")
+    local identifier = Framework.getIdentifier(target)
 
     local charId = CurrentCharId[target]
 
@@ -76,7 +81,7 @@ function Functions.generateWeaponSerial()
 end
 
 function Functions.updateInventory(target, items)
-    local identifier = GetPlayerIdentifierByType(target, "license")
+    local identifier = Framework.getIdentifier(target)
     local inventoryJson = json.encode(items)
     local query = Query["updateInventory"]
     local charId = CurrentCharId[target]
@@ -132,7 +137,7 @@ AddEventHandler('onResourceStart', function(resourceName)
         for I = 1, #allPlayers do
             local targetID = tonumber(allPlayers[I])
 
-            CurrentCharId[targetID] = Legacy.DATA:GetPlayerCharSlot(targetID)
+            CurrentCharId[targetID] = Framework.getCharId(targetID)
 
             if not CurrentCharId[targetID] then return end
 
@@ -143,12 +148,6 @@ AddEventHandler('onResourceStart', function(resourceName)
         end
     end
 end)
-
-
-
-
-
-
 
 
 Functions.autoUpdateInventory()

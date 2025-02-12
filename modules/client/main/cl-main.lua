@@ -201,6 +201,9 @@ local function registerInventoryToggle()
             local sourceName = Framework.getPlayerName()
             local sourceJob = Framework.getPlayerJobLabel()
 
+
+            print(sourceJob)
+
             Client.currentItems = Client.PlayerInventory
 
             local canOpen, reason = Functions.canOpenInventory()
