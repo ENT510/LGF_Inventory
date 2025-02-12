@@ -78,6 +78,16 @@ local success = exports.LGF_Inventory:setMetadata(target,data)
 -- @return table A table containing the player's inventory items.
 local playerInventory = exports.LGF_Inventory:getPlayerItems(target)
 
+--- Transfers an item from one player's inventory to another player's inventory.
+-- @param from_source number The ID of the player from whom the item will be transferred.
+-- @param to_targetId number The ID of the player to whom the item will be transferred.
+-- @param itemName string The name of the item to transfer.
+-- @param quantity number The amount of the item to transfer.
+-- @param metadata table|nil Additional metadata for the item (optional).
+-- @param slot number|nil The slot number of the item (optional).
+-- @return boolean True if the item was transferred successfully; false otherwise.
+local success = exports.LGF_Inventory:transferItem(from_source, to_targetId, itemName, quantity, metadata, slot)
+
 --- Registers a server-side hook for a specific inventory event.
 -- @param eventType string The type of event to hook into (e.g., 'itemAdded', 'itemRemoved', 'move').
 -- @param callback function The function to be called when the event occurs.
