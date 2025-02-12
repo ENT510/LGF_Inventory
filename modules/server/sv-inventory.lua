@@ -280,7 +280,6 @@ end
 ---@return string response Contains details about the operation result
 function Inventory.setMetadata(target, data)
     assert(type(target) == "number", "Invalid target ID")
-    assert(type(data) == "table", "Invalid data format")
     assert(type(data.itemName) == "string", "Missing or invalid itemName")
     assert(type(data.metadata) == "table", "Missing or invalid metadata")
     assert(type(data.slot) == "number", "Slot is required and must be a number")

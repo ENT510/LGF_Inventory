@@ -59,20 +59,13 @@ function Shared.nearbyPlayers(startCoords, maxDistance)
             local distance = #(startCoords - playerCoords)
             if distance <= maxDistance then
                 count = count + 1
-                nearbyPlayers[count] = { playerId = serverId, playerDistance = distance, playerPed= GetPlayerPed(playerId)}
+                nearbyPlayers[count] = { playerId = serverId, playerDistance = distance, playerPed = GetPlayerPed(
+                playerId) }
             end
         end
     end
 
     return nearbyPlayers
 end
-
-RegisterCommand("checkNearby", function()
-    local myCoords = GetEntityCoords(PlayerPedId())      -- Ottiene le coordinate del giocatore locale
-    local players = Shared.nearbyPlayers(myCoords, 10.0) -- Cerca i giocatori entro 10 metri
-
-    print(json.encode(players, { indent = true }))
-end, false)
-
 
 exports("getItems", Shared.getRegisteredItems)
