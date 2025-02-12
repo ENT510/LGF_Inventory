@@ -16,11 +16,11 @@ function Framework.getIdentifier(src)
 end
 
 function Framework.getCharId(src)
-    local identifier = Framework.getIdentifier(src)
-    if not identifier then return end
-    local charId = identifier:match("char(%d+):")
-    if not charId then return end
-    return tonumber(charId)
+    -- local identifier = Framework.getIdentifier(src)
+    -- if not identifier then return end
+    -- local charId = identifier:match("char(%d+):")
+    -- if not charId then return end
+    -- return tonumber(charId)
 end
 
 RegisterNetEvent('esx:playerDropped', function(playerId, reason)
