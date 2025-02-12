@@ -52,6 +52,3 @@ RegisterCommand(Config.inventoryCommand.ConfiscateInv.CommandName, function(sour
 end, false)
 
 
-Wait(4000)
-
-Inventory.addItem(1, "water", 5)

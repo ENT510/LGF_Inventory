@@ -42,7 +42,7 @@ function Functions.getInventory(target)
     local query = Query["getInventory"]
     local result
 
-    if charId then
+    if charId ~= nil then
         result = MySQL.query.await(query, { identifier, charId })
     else
         result = MySQL.query.await(query, { identifier })
@@ -98,11 +98,17 @@ function Functions.updateInventory(target, items)
     local query = Query["updateInventory"]
     local charId = CurrentCharId[target]
 
-    local affectedRows = MySQL.update.await(query, { inventoryJson, identifier, charId })
+    local queryParams = { inventoryJson, identifier }
+
+
+    if charId ~= nil then
+        table.insert(queryParams, charId)
+    end
+
+    local affectedRows = MySQL.update.await(query, queryParams)
 
     PlayerInventory[target] = items
-
-    return affectedRows ~= nil
+    return affectedRows and affectedRows > 0
 end
 
 function Functions.autoUpdateInventory()
@@ -152,7 +158,7 @@ AddEventHandler('onResourceStart', function(resourceName)
 
                 CurrentCharId[targetID] = Framework.getCharId(targetID)
 
-                if not CurrentCharId[targetID] then return end
+                -- if not CurrentCharId[targetID] then return end
 
                 local inventories = Functions.getInventory(targetID)
                 SetTimeout(1000, function()

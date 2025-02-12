@@ -21,14 +21,15 @@ function Framework.getCharId(src)
     -- local charId = identifier:match("char(%d+):")
     -- if not charId then return end
     -- return tonumber(charId)
+    return nil --- fallback, basically use directly identifier with prefix char:
 end
 
 RegisterNetEvent('esx:playerDropped', function(playerId, reason)
     Inventory.loadInventory(playerId, false)
 end)
 
--- Probably player return the source player but i dont have a server ESX to test this 
+-- Probably player return the source player but i dont have a server ESX to test this
 RegisterNetEvent('esx:playerLoaded', function(player, xPlayer, isNew)
-    local src= source
+    local src = source
     Inventory.loadInventory(src, true)
 end)

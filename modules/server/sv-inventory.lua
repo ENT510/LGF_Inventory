@@ -359,12 +359,12 @@ function Inventory.loadInventory(target, load)
     local playerId = target
     if load == true then
         local inventory = Functions.getInventory(playerId)
-
         SetTimeout(1000, function()
             TriggerClientEvent("LGF_Inventory:SyncTablePlayer", -1, playerId, inventory)
             local charId = Framework.getCharId(playerId)
             CurrentCharId[playerId] = charId
         end)
+        
     elseif load == false then
         if PlayerInventory[playerId] then
             Functions.updateInventory(playerId, PlayerInventory[playerId])
