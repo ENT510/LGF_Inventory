@@ -7,15 +7,28 @@ CurrentCharId   = {}
 local SAVE_DB_INTERVAL = Init.Convar.Server.SAVE_DB_INTERVAL
 local Query            = {}
 
+
+local function addPlayerInventoryColumn()
+    MySQL.query([[
+        ALTER TABLE users
+        ADD COLUMN IF NOT EXISTS playerInventory longtext DEFAULT '{}'
+    ]])
+end
+
+
 if GetResourceState("LEGACYCORE"):find("start") then
     Query["getInventory"] = 'SELECT playerInventory FROM users WHERE identifier = ? AND charIdentifier = ?'
     Query["updateInventory"] = 'UPDATE users SET playerInventory = ? WHERE identifier = ? AND charIdentifier = ?'
+    addPlayerInventoryColumn()
 elseif GetResourceState("es_extended"):find("start") then
-    Query["getInventory"] = 'SELECT playerInventory FROM users WHERE identifier = ? '
+    Query["getInventory"] = 'SELECT playerInventory FROM users WHERE identifier = ?'
     Query["updateInventory"] = 'UPDATE users SET playerInventory = ? WHERE identifier = ?'
+    addPlayerInventoryColumn()
 elseif GetResourceState("qbx_core"):find("start") then
 
 end
+
+
 
 
 function Functions.getInventory(target)
@@ -133,19 +146,21 @@ end
 -- [[ Populate Inventory Table, Preventing call Every time Database to Get Item]]
 AddEventHandler('onResourceStart', function(resourceName)
     if resourceName == GetCurrentResourceName() then
-        local allPlayers = GetPlayers()
-        for I = 1, #allPlayers do
-            local targetID = tonumber(allPlayers[I])
+        SetTimeout(500, function()
+            local allPlayers = GetPlayers()
+            for I = 1, #allPlayers do
+                local targetID = tonumber(allPlayers[I])
 
-            CurrentCharId[targetID] = Framework.getCharId(targetID)
+                CurrentCharId[targetID] = Framework.getCharId(targetID)
 
-            if not CurrentCharId[targetID] then return end
+                if not CurrentCharId[targetID] then return end
 
-            local inventories = Functions.getInventory(targetID)
-            SetTimeout(1000, function()
-                TriggerClientEvent("LGF_Inventory:SyncTablePlayer", -1, targetID, inventories)
-            end)
-        end
+                local inventories = Functions.getInventory(targetID)
+                SetTimeout(1000, function()
+                    TriggerClientEvent("LGF_Inventory:SyncTablePlayer", -1, targetID, inventories)
+                end)
+            end
+        end)
     end
 end)
 
