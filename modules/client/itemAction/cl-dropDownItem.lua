@@ -27,6 +27,9 @@ function Action.handleItemAction(data)
     end
 
 
+    print(json.encode(data, { indent = true }))
+
+
     if actionType == "transfer" and data.typeInventory == "dumpster" then
         if #(GetEntityCoords(PlayerPedId()) - GetEntityCoords(CurrentDumpst)) > 5.0 then
             return
@@ -47,11 +50,11 @@ function Action.handleItemAction(data)
 
 
     if actionType == "give" then
-   
         if data.item.itemType == "weapon" and isArmed then Weapon.DisarmWeapon() end
         Client.closeInv()
         Client.openPlayerList(true, data.item.itemName, quantityToRemove, data.item.slot, data.item.metadata)
-    elseif actionType == "use" and not item.itemName == "money" then
+    elseif actionType == "use" then
+        if item.itemName == "money" then return end
         Action.useItem(item, quantityToRemove)
     elseif actionType == "drop" or actionType == "take" then
         local ped = PlayerPedId()

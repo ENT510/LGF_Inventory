@@ -18,6 +18,15 @@ return {
         description = "A delicious burger that restores hunger and gives you energy.",
         closeOnUse = true,
     },
+    ["bandage"] = {
+        itemLabel = "Bandage",
+        itemWeight = 0.05,
+        itemType = "item",
+        stackable = true,
+        itemRarity = "common",
+        description = "A simple bandage used for healing wounds and restoring health.",
+        closeOnUse = true,
+    },
     ["WEAPON_CARBINERIFLE"] = {
         itemLabel = "Carabine Rifle",
         itemWeight = 4.5,

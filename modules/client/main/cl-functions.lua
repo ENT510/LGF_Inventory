@@ -42,27 +42,36 @@ end
 function Functions.playAnim(data)
     local ped = PlayerPedId()
     local propObject
+    local _promise = promise.new()
 
-    local bone = data.prop.bone
-    local model = Functions.requestModel(data.prop.model)
-    propObject = CreateObject(model, GetEntityCoords(ped), true, false, false)
+    if data.prop then
+        local bone = data.prop.bone
+        local model = Functions.requestModel(data.prop.model)
 
-    AttachEntityToEntity(propObject, ped, GetPedBoneIndex(ped, bone),
-        data.prop.pos.x, data.prop.pos.y, data.prop.pos.z,
-        data.prop.rot.x, data.prop.rot.y, data.prop.rot.z,
-        false, true, true, true, 0, true)
+        propObject = CreateObject(model, GetEntityCoords(ped), true, false, false)
+
+        AttachEntityToEntity(propObject, ped, GetPedBoneIndex(ped, bone),
+            data.prop.pos.x, data.prop.pos.y, data.prop.pos.z,
+            data.prop.rot.x, data.prop.rot.y, data.prop.rot.z,
+            false, true, true, true, 0, true)
+    end
 
     Functions.requestAnim(data.animData.dictionary)
-
     TaskPlayAnim(ped, data.animData.dictionary, data.animData.clip, 8.0, 8.0, -1, 1, 0, false, false, false)
+
 
     SetTimeout(5000, function()
         ClearPedTasks(ped)
         RemoveAnimDict(data.animData.dictionary)
+
         if propObject then
             DeleteEntity(propObject)
         end
+
+        _promise:resolve()
     end)
+
+    return Citizen.Await(_promise)
 end
 
 function Functions.canOpenInventory()
@@ -95,5 +104,3 @@ function Functions.drawSpriteRef(coords)
     DrawSprite(Info.dict, Info.texture, 0, 0, Info.width, Info.height, 0, r, g, b, a)
     ClearDrawOrigin()
 end
-
-

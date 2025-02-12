@@ -198,8 +198,8 @@ local function registerInventoryToggle()
         if not LocalPlayer.state.invIsOpen then
             Client.PlayerInventory = Inventory.getPersonalInventory() or
                 lib.callback.await("LGF_Inventory:GetPlayerInv", false)
-            local sourceName = LocalPlayer.state.GetPlayerObject.playerName
-            local sourceJob = LocalPlayer.state.GetPlayerObject.JobLabel
+            local sourceName = Framework.getPlayerName()
+            local sourceJob = Framework.getPlayerJobLabel()
 
             Client.currentItems = Client.PlayerInventory
 
