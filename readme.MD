@@ -82,7 +82,6 @@ local playerInventory = exports.LGF_Inventory:getPlayerItems(target)
 -- @param eventType string The type of event to hook into (e.g., 'itemAdded', 'itemRemoved', 'move').
 -- @param callback function The function to be called when the event occurs.
 -- @return string The ID of the Hook
-
 local id = exports.LGF_Inventory:registerServerHook(eventType, function(eventData) end)
 
 --- Removes a previously registered server-side hook.
