@@ -10,7 +10,7 @@ end
 
 -- Basically name dont change when player is already loaded [for my core im using a stateBag]
 function Framework.getPlayerName()
-    local PlayerData = LocalPlayer.state.getPlayerObject
+    local PlayerData = LocalPlayer.state.GetPlayerObject
     if not PlayerData then return end
     return PlayerData.playerName
 end
