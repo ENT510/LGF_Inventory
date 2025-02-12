@@ -23,9 +23,3 @@ AddEventHandler('LegacyCore:PlayerLogout', function()
         TriggerClientEvent("LGF_Inventory:SyncTablePlayer", -1, playerId, PlayerInventory[playerId])
     end)
 end)
-
-
-
-
-
-

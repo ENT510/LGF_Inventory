@@ -94,8 +94,7 @@ function Inventory.addItem(target, itemName, quantity, metadata, slot)
     local additionalWeight = data.itemWeight * quantity
 
     if currentWeight + additionalWeight > MAX_INV_WEIGHT then
-        Shared.notification("Inventory Full", "You exceed your maximum inventory weight.", "warning", target)
-        return false
+        return false, "Inventory Full"
     end
 
     if not data then return false end
@@ -188,30 +187,33 @@ function Inventory.removeItem(target, itemName, quantity, slot, metadata)
     return true
 end
 
+local isConfiscated = {}
+
 ---@param target number Player ID
 ---@param state string "confiscate" to remove inventory, "add" to return it
 ---@return boolean Success of the operation
 function Inventory.confiscateInventory(target, state)
     if not target then return false end
     local backupKey = ("%s_confiscateBackup"):format(target)
-    local isConfiscated = false
+    isConfiscated[target] = false
 
     if state == "confiscate" then
         if PlayerInventory[backupKey] then return false end
         PlayerInventory[backupKey] = Functions.tabledeepClone(Array.getPlayerInv(target))
-        PlayerInventory[target] = {}
-        isConfiscated = true
+        PlayerInventory[target]    = {}
+        isConfiscated[target]      = true
         TriggerClientEvent("LGF_Inventory:closeInventory", target)
     elseif state == "add" then
         if not PlayerInventory[backupKey] then return false end
         PlayerInventory[target] = Functions.tabledeepClone(PlayerInventory[backupKey])
         PlayerInventory[backupKey] = nil
-        isConfiscated = false
+        isConfiscated[target] = false
     else
         return false
     end
 
-    TriggerClientEvent("LGF_Inventory:SyncTablePlayer", -1, target, PlayerInventory[target], isConfiscated)
+
+    TriggerClientEvent("LGF_Inventory:SyncTablePlayer", -1, target, PlayerInventory[target], isConfiscated[target])
     return true
 end
 
@@ -322,6 +324,33 @@ function Inventory.getItemCount(target, itemName)
     return count
 end
 
+--- @param from_source number Player ID
+--- @param to_targetId number Target Player ID
+--- @param itemName string Item name
+--- @param quantity number Amount of the item to transfer
+--- @param metadata table|nil Metadata for the item (optional)
+--- @param slot number|nil Slot number for the item (optional)
+--- @return boolean Success of the transfer
+function Inventory.transferItem(from_source, to_targetId, itemName, quantity, metadata, slot)
+    local targetWeight = Inventory.getInventoryWeight(to_targetId)
+
+    local registeredItems = Shared.getRegisteredItems()
+    local itemData = registeredItems[itemName]
+
+    local itemWeight = itemData.itemWeight * quantity
+
+    if targetWeight + itemWeight > MAX_INV_WEIGHT then
+        Shared.notification("Error", "Target's inventory is too full to accept this item", "error", from_source)
+        return false
+    end
+
+    Inventory.removeItem(from_source, itemName, quantity, slot, metadata)
+    Inventory.addItem(to_targetId, itemName, quantity, metadata)
+
+    return true
+end
+
+exports("transferItem", Inventory.transferItem)
 exports("getItemCount", Inventory.getItemCount)
 exports("getInventoryData", Inventory.getInventoryData)
 exports("getFirstFreeSlot", Inventory.getFirstFreeSlot)

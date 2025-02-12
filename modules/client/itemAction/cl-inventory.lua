@@ -130,7 +130,7 @@ function Inventory.closeInventory()
 end
 
 exports("getFirstFreeSlot", Inventory.getFirstFreeSlot)
-exports("getPlayerInventory", Inventory.getPersonalInventory)
+exports("getPlayerItems", Inventory.getPersonalInventory)
 exports("getItemFromSlot", Inventory.getItemFromSlot)
 exports("getInventoryWeight", Inventory.getInventoryWeight)
 exports("getMoneyCount", Inventory.getMoneyCount)

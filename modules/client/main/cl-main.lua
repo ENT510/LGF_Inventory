@@ -1,18 +1,21 @@
-Client                         = {}
-LocalPlayer.state.invIsOpen    = false
-LocalPlayer.state.hotBarIsOpen = false
-Client.PlayerInventory         = {}
-PlayerInventories              = {}
-Client.currentPedClone         = nil
-Client.currentItems            = {}
+Client                             = {}
+LocalPlayer.state.invIsOpen        = false
+LocalPlayer.state.hotBarIsOpen     = false
+LocalPlayer.state.playerListIsOpen = false
+Client.PlayerInventory             = {}
+PlayerInventories                  = {}
+Client.currentPedClone             = nil
+Client.currentItems                = {}
 
-local ENABLE_SCREENBLUR        = Init.Convar.Client.ENABLE_SCREENBLUR
-local MAX_SLOT_INV             = Init.Convar.Shared.MAX_SLOT_INV
-local MAX_INV_WEIGHT           = Init.Convar.Shared.MAX_INV_WEIGHT
+local ENABLE_SCREENBLUR            = Init.Convar.Client.ENABLE_SCREENBLUR
+local MAX_SLOT_INV                 = Init.Convar.Shared.MAX_SLOT_INV
+local MAX_INV_WEIGHT               = Init.Convar.Shared.MAX_INV_WEIGHT
 
+
+local confiscatedStates = {}
 
 function Client.openInventory(data)
-    if LocalPlayer.state.invIsConfiscated then
+    if confiscatedStates[GetPlayerServerId(PlayerId())] then
         Shared.notification("Inventory Confiscated", "Your inventory has been confiscated.", "warning")
         return
     end
@@ -30,6 +33,40 @@ function Client.openInventory(data)
     else
         removePreviewPed()
     end
+end
+
+function Client.openPlayerList(display, itemName, itemQuantity, slot, metadata)
+    LocalPlayer.state.playerListIsOpen = display
+    SetNuiFocus(display, display)
+
+
+    local nearbyPlayers = Shared.nearbyPlayers(GetEntityCoords(PlayerPedId()), 5.0)
+    local Players = {}
+
+    for i = 1, #nearbyPlayers do
+        local player = nearbyPlayers[i]
+        local GetNearbyName = lib.callback.await("LGF_Inventory:GetNameForOpenInv", false, player.playerId)
+        local playerData = {
+            id = player.playerId,
+            name = GetNearbyName,
+            distance = player.playerDistance
+        }
+        Players[#Players + 1] = playerData
+    end
+
+    SendNUIMessage({
+        action = "openPlayerList",
+        data = {
+            Display = display,
+            Players = Players,
+            Item = {
+                itemName = itemName,
+                itemQuantity = itemQuantity,
+                slot = slot,
+                metadata = metadata
+            }
+        }
+    })
 end
 
 function Client.openTargetInventory(target, screenPed)
@@ -90,14 +127,22 @@ function Client.closeInv()
 end
 
 RegisterNuiCallback("LGF_Inventory:Nui:CloseInventory", function(data, cb)
-    Client.closeInv()
     cb(1)
+    if data.name == "openInventory" then
+        Client.closeInv()
+    elseif data.name == "openPlayerList" then
+        Client.openPlayerList(false)
+    end
 end)
 
 AddEventHandler("onResourceStop", function(res)
     if GetCurrentResourceName() == res then
         removePreviewPed()
         SetStreamedTextureDictAsNoLongerNeeded("shared")
+        local isArmed, weaponData = Weapon.isArmed()
+        if isArmed then
+            RemoveAllPedWeapons(PlayerPedId(), true)
+        end
     end
 end)
 
@@ -105,8 +150,8 @@ end)
 -- And Populate The client Inventory
 
 RegisterNetEvent("LGF_Inventory:SyncTablePlayer", function(targetInventory, inventory, isConfiscated)
-    local confiscatedState = isConfiscated or false
-    LocalPlayer.state:set("invIsConfiscated", confiscatedState, true)
+    confiscatedStates[targetInventory] = isConfiscated or false
+
 
     if type(inventory) ~= "table" then
         inventory = {}

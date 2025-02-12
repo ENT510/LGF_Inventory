@@ -23,23 +23,23 @@ lib.callback.register("LGF_Inventory:Hooks:MonitorHooks", function(source, data)
 end)
 
 
+lib.callback.register("LGF_Inventory:Nui:GiveItemToPlayer", function(source, tid, itemName, quantity, slot, metadata)
+    return Inventory.transferItem(source, tid, itemName, quantity, metadata, slot)
+end)
+
+
 lib.callback.register("LGF_Inventory:UpdateTableDrops", function(source, obj, data)
     Drops[obj] = data
     return true
 end)
 
-lib.callback.register("LGF_Inventory:CreateObjectDrop",
-    function(source, data, quantityToAdd, obj, targetInventory, targetSource, model, dropCoords)
-        TriggerClientEvent("LGF_Inventory:CreateObjectDrop", -1, data, quantityToAdd, obj, targetInventory, model,
-            dropCoords)
 
-        print(json.encode(data, { indent = true }))
-
-        data.quantity = quantityToAdd
-
-        Functions.removeItem(targetSource, data)
-        return true
-    end)
+lib.callback.register("LGF_Inventory:CreateObjectDrop", function(src, d, qty, obj, tgtInv, tgtS, mdl, dropCoords)
+    TriggerClientEvent("LGF_Inventory:CreateObjectDrop", -1, d, qty, obj, tgtInv, mdl, dropCoords)
+    d.quantity = qty
+    Functions.removeItem(tgtS, d)
+    return true
+end)
 
 
 lib.callback.register("LGF_Inventory:PickupItem", function(source, obj, quantiToAdd, target)

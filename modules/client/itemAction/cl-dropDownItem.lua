@@ -17,7 +17,7 @@ function Action.handleItemAction(data)
     local quantityToRemove = (data.sliderValue == 0 and 1 or data.sliderValue)
     local targetInventory = data.targetInventory
     local targetSource = data.source
-
+    local isArmed, weaponData = Weapon.isArmed()
 
     if actionType == "use" and item.itemType == "weapon" then
         if item.closeOnUse then Client.closeInv() end
@@ -47,21 +47,21 @@ function Action.handleItemAction(data)
 
 
     if actionType == "give" then
-
+   
+        if data.item.itemType == "weapon" and isArmed then Weapon.DisarmWeapon() end
+        Client.closeInv()
+        Client.openPlayerList(true, data.item.itemName, quantityToRemove, data.item.slot, data.item.metadata)
     elseif actionType == "use" and not item.itemName == "money" then
         Action.useItem(item, quantityToRemove)
     elseif actionType == "drop" or actionType == "take" then
         local ped = PlayerPedId()
-
         local coords = GetOffsetFromEntityInWorldCoords(ped, 0.0, 1.5, 0.0)
         local Prop = Init.Convar.Client.DROP_OBJECT_MODEL
-
-
-
         Client.closeInv()
 
-        local closestObj = GetClosestObjectOfType(coords.x, coords.y, coords.z, 1.5, Prop, false, false, false)
+        if data.item.itemType == "weapon" and isArmed then Weapon.DisarmWeapon() end
 
+        local closestObj = GetClosestObjectOfType(coords.x, coords.y, coords.z, 1.5, Prop, false, false, false)
         if DoesEntityExist(closestObj) then coords = GetOffsetFromEntityInWorldCoords(ped, 0.0, 2.0, 0.0) end
 
         local obj = Functions.createObjDrop({
@@ -287,6 +287,26 @@ RegisterNetEvent("LGF_Inventory:AddItem", function(itemName, quantity, metadata,
     })
 end)
 
+RegisterNuiCallback("LGF_Inventory:Nui:GiveItemToPlayer", function(data, cb)
+    cb(true)
+    local targetId = data.playerId
+    local itemName = data.itemName
+    local itemQuantity = data.itemQuantity
+    local slot = data.slot
+    local metadata = data.metadata
+    local CoordsTargetId = GetPlayerFromServerId(targetId)
+
+    if #(GetEntityCoords(PlayerPedId()) - GetEntityCoords(GetPlayerPed(CoordsTargetId))) > 5.0 then
+        return
+    end
+
+    local _Call = lib.callback.await("LGF_Inventory:Nui:GiveItemToPlayer", false, tonumber(targetId), itemName,
+        itemQuantity, slot, metadata)
+
+    if _Call then
+        Client.openPlayerList(false, itemName, itemQuantity, slot, metadata)
+    end
+end)
 
 exports("useItem", Action.useItem)
 
@@ -294,17 +314,13 @@ exports("onUse", function(callback)
     Action.Listener.onUse = callback
 end)
 
-function handleInternalItem(itemName)
-    local itemData = PrefixAnim[itemName]
-    if itemData then
-        if itemData.onUsing then
-            itemData.onUsing(itemData)
-        end
-    end
-end
-
 exports.LGF_Inventory:onUse(function(item)
     if item and PrefixAnim[item.itemName] then
-        handleInternalItem(item.itemName)
+        local itemData = PrefixAnim[item.itemName]
+        if itemData then
+            if itemData.onUsing then
+                itemData.onUsing(itemData)
+            end
+        end
     end
 end)

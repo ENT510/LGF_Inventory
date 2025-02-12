@@ -129,7 +129,21 @@ RegisterNetEvent("LGF_Inventory:isPedShooting", function()
     end
 end)
 
+function Weapon.isArmed()
+    local ped = PlayerPedId()
+    local currentWeapon = GetSelectedPedWeapon(ped)
 
+
+    if currentWeapon == 0 then
+        return false, nil
+    end
+
+    if DataEquiped then
+        return true, DataEquiped
+    else
+        return true, nil
+    end
+end
 
 function Weapon.DisarmWeapon()
     local ped = PlayerPedId()
@@ -156,11 +170,6 @@ end, false)
 
 RegisterKeyMapping("+reload_weapon", "Ricarica Arma", "keyboard", "r")
 
-AddEventHandler("onResourceStop", function(res)
-    if GetCurrentResourceName() == res then
-        RemoveAllPedWeapons(PlayerPedId(), true)
-    end
-end)
 
 
 
