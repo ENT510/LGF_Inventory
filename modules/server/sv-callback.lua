@@ -85,8 +85,6 @@ end)
 
 lib.callback.register('LGF_Inventory:removeAmmo', function(source, itemName, quantityAmmo, serial, ammoInWeapon)
     Inventory.removeItem(source, itemName, quantityAmmo)
-
-
     return true
 end)
 

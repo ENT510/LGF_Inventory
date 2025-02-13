@@ -1,4 +1,5 @@
 --[[HANDLE INTERNAL ITEMS]]
+--[[Functions.playAnim() is a promise, the code below the function will only run at the end of the animation]]
 
 PrefixAnim = {
     ["water"] = {
