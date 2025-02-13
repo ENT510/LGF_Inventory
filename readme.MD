@@ -2,7 +2,7 @@
 
 ## Server Exports
 
-<img src="https://i.ibb.co/JFvgCMQT/image.png" alt="LGF Inventory API" width="400">
+![LGF Inventory API](https://i.ibb.co/JFvgCMQT/image.png)
 
 ```lua
 --- Retrieves the count of a specific item in a player's inventory.
