@@ -1,6 +1,6 @@
 # LGF_Inventory API
 
-![inv](https://i.ibb.co/JFvgCMQ/image.png) 
+![inv](https://i.ibb.co/JFvgCMQT/image.png) 
 
 # ConVar Configuration
 
