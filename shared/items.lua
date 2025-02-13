@@ -27,26 +27,6 @@ return {
         description = "A simple bandage used for healing wounds and restoring health.",
         closeOnUse = true,
     },
-    ["WEAPON_CARBINERIFLE"] = {
-        itemLabel = "Carabine Rifle",
-        itemWeight = 4.5,
-        itemType = "weapon",
-        stackable = false,
-        itemRarity = "legendary",
-        description = "A powerful carabine rifle effective in combat. It can be used a limited number of times.",
-        closeOnUse = true,
-        typeAmmo = "ammo-rifle2"
-    },
-    ["ammo-rifle2"] = {
-        itemLabel = "Rifle Ammo",
-        itemWeight = 0.1,
-        itemType = "ammo",
-        stackable = true,
-        itemRarity = "rare",
-        description = "Ammunition for the Carabine Rifle. Essential for sustained combat.",
-        closeOnUse = false,
-        usable = false,
-    },
     ["weed"] = {
         itemLabel = "Pineapple Chunk",
         itemWeight = 0.3,
@@ -146,5 +126,47 @@ return {
         description = "Physical cash that can be used for purchases or traded.",
         closeOnUse = false,
         usable = false,
-    }
+    },
+
+    ["WEAPON_CARBINERIFLE"] = {
+        itemLabel = "Carabine Rifle",
+        itemWeight = 4.5,
+        itemType = "weapon",
+        stackable = false,
+        itemRarity = "legendary",
+        description = "A powerful carabine rifle effective in combat. It can be used a limited number of times.",
+        closeOnUse = true,
+        typeAmmo = "ammo-rifle2"
+    },
+    ["ammo-rifle2"] = {
+        itemLabel = "Rifle Ammo",
+        itemWeight = 0.1,
+        itemType = "ammo",
+        stackable = true,
+        itemRarity = "rare",
+        description = "Ammunition for the Carabine Rifle. Essential for sustained combat.",
+        closeOnUse = false,
+        usable = false,
+    },
+    ["WEAPON_PISTOL_MK2"] = {
+        itemLabel = "Pistol Mk2",
+        itemWeight = 4.5,
+        itemType = "weapon",
+        stackable = false,
+        itemRarity = "rare",
+        description = "An upgraded semi-automatic pistol with enhanced accuracy and stopping power. Ideal for close to mid-range engagements.",
+        closeOnUse = true,
+        typeAmmo = "ammo-9"
+    },
+    
+    ["ammo-9"] = {
+        itemLabel = "9mm Ammo",
+        itemWeight = 0.1,
+        itemType = "ammo",
+        stackable = true,
+        itemRarity = "rare",
+        description = "Standard 9mm rounds compatible with most handguns. Reliable and widely used in urban combat.",
+        closeOnUse = false,
+        usable = false,
+    },
 }

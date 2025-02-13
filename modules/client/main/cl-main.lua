@@ -126,6 +126,8 @@ function Client.closeInv()
     Client.currentItems = {}
 end
 
+
+
 RegisterNuiCallback("LGF_Inventory:Nui:CloseInventory", function(data, cb)
     cb(1)
     if data.name == "openInventory" then

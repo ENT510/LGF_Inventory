@@ -24,13 +24,13 @@ if serverContext then
     }
 else
     Init.Convar.Client = {
-        ENABLE_SCREENBLUR    = Init.intToBool(GetConvarInt("lgf_inventory:screenBlur", 1)),
-        DROP_OBJECT_MODEL    = GetConvar("lgf_inventory:dropModel", "hei_p_f_bag_var6_bus_s"),
-        ENABLE_SPRITE_DROP   = Init.intToBool(GetConvarInt("lgf_inventory:enableSpriteDrop", 1)),
-        HOTBAR_TOGGLE_KEY    = GetConvar("lgf_inventory:hotbarKey", "f9"),
-        INVENTORY_TOGGLE_KEY = GetConvar("lgf_inventory:inventoryKey", "f3")
+        ENABLE_SCREENBLUR      = Init.intToBool(GetConvarInt("lgf_inventory:screenBlur", 1)),
+        DROP_OBJECT_MODEL      = GetConvar("lgf_inventory:dropModel", "hei_p_f_bag_var6_bus_s"),
+        ENABLE_SPRITE_DROP     = Init.intToBool(GetConvarInt("lgf_inventory:enableSpriteDrop", 1)),
+        HOTBAR_TOGGLE_KEY      = GetConvar("lgf_inventory:hotbarKey", "f9"),
+        INVENTORY_TOGGLE_KEY   = GetConvar("lgf_inventory:inventoryKey", "f3"),
+        ENABLE_AMMO_CHARGERDUI = Init.intToBool(GetConvarInt("lgf_inventory:enableAmmoChargerDui", 1))
     }
 end
-
 
 Legacy = exports.LEGACYCORE:GetCoreData()

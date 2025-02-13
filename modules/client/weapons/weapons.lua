@@ -71,7 +71,7 @@ end
 
 function DisableShootingControls()
     local ped = PlayerPedId()
-    if IsPedArmed(ped, 4) then
+    if Weapon.isArmed() then
         DisableControlAction(1, 140, true)
         DisableControlAction(1, 141, true)
         DisableControlAction(1, 142, true)
