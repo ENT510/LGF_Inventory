@@ -10,6 +10,7 @@
 ---@field closeOnUse? boolean
 ---@field metadata? table
 ---@field durability? number
+---@field usable? boolean
 
 Inventory = {}
 

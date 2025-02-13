@@ -5,8 +5,6 @@ AddEventHandler("LGF_Inventory:Hooks:ActionResult", function(bool)
     if Hook.pendingCallback then
         Hook.pendingCallback(bool)
         Hook.pendingCallback = nil
-    else
-        print("[ERRORE] Nessun callback pending per rispondere alla NUI")
     end
 end)
 
@@ -14,9 +12,6 @@ RegisterNuiCallback("LGF_Inventory.Nui.MonitorAction", function(data, cb)
     Hook.pendingCallback = cb
     Hook.monitorAction(data)
 end)
-
-
-
 
 function Hook.monitorAction(data)
     local fromSlot = data.fromSlot
@@ -52,18 +47,19 @@ function Hook.monitorAction(data)
 
                 if not merged then
                     local newItem = {
-                        slot = toSlot,
-                        itemName = movedItem.itemName,
-                        quantity = movedItem.quantity,
-                        itemLabel = newItemData.itemLabel,
-                        itemWeight = newItemData.itemWeight,
-                        itemType = newItemData.itemType,
-                        stackable = newItemData.stackable,
-                        itemRarity = movedItem.itemRarity or newItemData.itemRarity,
+                        slot        = toSlot,
+                        itemName    = movedItem.itemName,
+                        quantity    = movedItem.quantity,
+                        itemLabel   = newItemData.itemLabel,
+                        itemWeight  = newItemData.itemWeight,
+                        itemType    = newItemData.itemType,
+                        stackable   = newItemData.stackable,
+                        itemRarity  = movedItem.itemRarity or newItemData.itemRarity,
                         description = newItemData.description,
-                        closeOnUse = newItemData.closeOnUse,
-                        metadata = newItemData.metadata or nil,
-                        durability = newItemData.durability or nil
+                        closeOnUse  = newItemData.closeOnUse,
+                        metadata    = newItemData.metadata or nil,
+                        durability  = newItemData.durability or nil,
+                        usable      = newItemData.usable or nil
                     }
                     table.insert(playerInventory, newItem)
                 end
@@ -91,6 +87,5 @@ function Hook.monitorAction(data)
     Client.PlayerInventory = playerInventory
 
     lib.callback.await("LGF_Inventory:Hooks:MonitorHooks", false, Client.PlayerInventory)
-
     TriggerServerEvent("LGF_Inventory:Hooks:MonitorHooks", data)
 end

@@ -391,3 +391,5 @@ exports("openTargetInventory", Inventory.openTargetInventory)
 exports("confiscateInventory", Inventory.confiscateInventory)
 exports("hasItem", Inventory.hasItem)
 exports("setMetadata", Inventory.setMetadata)
+
+

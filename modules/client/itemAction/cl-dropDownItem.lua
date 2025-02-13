@@ -27,6 +27,7 @@ function Action.handleItemAction(data)
     end
 
 
+
     if actionType == "carryFront" or actionType == "carryBack" and item.itemType == "weapon" then
         if isArmed then
             Weapon.DisarmWeapon()
@@ -56,7 +57,10 @@ function Action.handleItemAction(data)
 
 
     if actionType == "give" then
-        if data.item.itemType == "weapon" and isArmed then Weapon.DisarmWeapon() Weapon.DisarmCarry() end
+        if data.item.itemType == "weapon" and isArmed then
+            Weapon.DisarmWeapon()
+            Weapon.DisarmCarry()
+        end
         Client.closeInv()
         Client.openPlayerList(true, data.item.itemName, quantityToRemove, data.item.slot, data.item.metadata)
     elseif actionType == "use" then
@@ -68,15 +72,15 @@ function Action.handleItemAction(data)
         local Prop = Init.Convar.Client.DROP_OBJECT_MODEL
         Client.closeInv()
 
- 
 
-        if data.item.itemType == "weapon" and isArmed then Weapon.DisarmWeapon()   end
+
+        if data.item.itemType == "weapon" and isArmed then Weapon.DisarmWeapon() end
 
 
         if LocalPlayer.state.isCarryWeapon then
-            Weapon.DisarmCarry() 
+            Weapon.DisarmCarry()
         end
-        
+
         local closestObj = GetClosestObjectOfType(coords.x, coords.y, coords.z, 1.5, Prop, false, false, false)
         if DoesEntityExist(closestObj) then coords = GetOffsetFromEntityInWorldCoords(ped, 0.0, 2.0, 0.0) end
 
@@ -208,25 +212,33 @@ function Action.useItem(item, quantity)
         Client.closeInv()
     end
 
+    -- print(json.encode(item,{indent= true}))
+
     if Action.Listener.onUse then
         Action.Listener.onUse(item)
     end
 
+    if itemData.usable == false then
+        return
+    end
+
+    -- if usable then
     if item.stackable then
         Action.removeItem({
             itemName = item.itemName,
             quantity = 1,
             slot = item.slot,
-            metadata = item.metadata
+            metadata = item.metadata or nil
         })
     else
         Action.removeItem({
             itemName = item.itemName,
             quantity = quantity,
             slot = item.slot,
-            metadata = item.metadata
+            metadata = item.metadata or nil
         })
     end
+    -- end
 end
 
 function Action.triggerOnUse(item)
@@ -236,7 +248,7 @@ function Action.triggerOnUse(item)
 end
 
 function Action.removeItem(data)
-    return lib.callback.await("LGF_Inventory:RemoveItem", false, data)
+    lib.callback.await("LGF_Inventory:RemoveItem", false, data)
 end
 
 RegisterNetEvent("LGF_Inventory:RemoveItem", function(data)
@@ -250,6 +262,7 @@ RegisterNetEvent("LGF_Inventory:RemoveItem", function(data)
         metadata = data?.metadata or itemData.metadata,
         quantity = data?.quantity
     }
+
 
     SendNUIMessage({
         action = "LGF_Inventory:Removeitem",
@@ -340,3 +353,5 @@ exports.LGF_Inventory:onUse(function(item)
         end
     end
 end)
+
+

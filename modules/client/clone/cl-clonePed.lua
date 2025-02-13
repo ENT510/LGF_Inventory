@@ -17,13 +17,13 @@ function CreatePedScreen(ped)
         NetworkSetEntityInvisibleToNetwork(ClonedPed, false)
         Wait(200)
 
+        SetMouseCursorVisible(false)
         GivePedToPauseMenu(ClonedPed, 2)
         SetPauseMenuPedLighting(true)
         SetPauseMenuPedSleepState(false)
         Wait(1000)
         SetPauseMenuPedSleepState(true)
 
-        SetMouseCursorVisible(false)
     end)
 end
 

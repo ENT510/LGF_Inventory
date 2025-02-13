@@ -13,6 +13,7 @@ PrefixAnim = {
         onUsing = function(item)
             Functions.playAnim(item)
             Framework.setStatus("thirst")
+            
         end
     },
 

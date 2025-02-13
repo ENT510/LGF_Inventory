@@ -155,7 +155,6 @@ end)
 RegisterNetEvent("LGF_Inventory:SyncTablePlayer", function(targetInventory, inventory, isConfiscated)
     confiscatedStates[targetInventory] = isConfiscated or false
 
-    print(json.encode(inventory,{indent = true}))
 
     if type(inventory) ~= "table" then
         inventory = {}

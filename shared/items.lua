@@ -45,6 +45,7 @@ return {
         itemRarity = "rare",
         description = "Ammunition for the Carabine Rifle. Essential for sustained combat.",
         closeOnUse = false,
+        usable = false,
     },
     ["weed"] = {
         itemLabel = "Pineapple Chunk",
@@ -70,6 +71,7 @@ return {
         itemType = "item",
         stackable = false,
         itemRarity = "common",
+        usable = false,
         description = "A stylish hat for outdoor adventures.",
         closeOnUse = false,
         metadata = {
@@ -82,6 +84,7 @@ return {
         itemType = "item",
         stackable = false,
         itemRarity = "uncommon",
+        usable = false,
         description = "Durable pants, perfect for outdoor work and exploration.",
         closeOnUse = false,
         metadata = {
@@ -98,6 +101,7 @@ return {
         itemRarity = "common",
         description = "Comfortable sneakers for walking and running.",
         closeOnUse = false,
+        usable = false,
         metadata = {
             maleDrawableId = 7,
             femaleDrawableId = 2,
@@ -112,6 +116,7 @@ return {
         itemRarity = "rare",
         description = "A warm  jacket to keep you comfortable in cold climates.",
         closeOnUse = false,
+        usable = false,
         metadata = {
             maleDrawableId = 7,
             femaleDrawableId = 7,
@@ -126,6 +131,7 @@ return {
         itemRarity = "epic",
         description = "A large and sturdy backpack to carry your gear and supplies during long adventures.",
         closeOnUse = false,
+        usable = false,
         metadata = {
             maleDrawableId = 5,
             femaleDrawableId = 5,
@@ -139,5 +145,6 @@ return {
         itemRarity = "common",
         description = "Physical cash that can be used for purchases or traded.",
         closeOnUse = false,
+        usable = false,
     }
 }
