@@ -18,6 +18,7 @@ end
 
 RegisterNetEvent('LegacyCore:PlayerLoaded')
 AddEventHandler('LegacyCore:PlayerLoaded', function(slot, data, newPlayer)
+    CurrentCharId[data.source] = slot
     Inventory.loadInventory(data.source, true)
 end)
 

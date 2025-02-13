@@ -40,3 +40,4 @@ function Framework.setStatus(typeStatus, quantity)
         Legacy.DATA:UpdateStatus('hunger', math.random(10, 20))
     end
 end
+

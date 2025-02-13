@@ -2,6 +2,9 @@ Weapon = {}
 local wheelEnabled = false
 local DataEquiped = {}
 
+LocalPlayer.state.isCarryWeapon = false
+
+
 function Weapon.setWheelState(enabled)
     if enabled == nil then enabled = wheelEnabled end
     SetWeaponsNoAutoswap(not enabled)
@@ -170,6 +173,88 @@ end, false)
 
 RegisterKeyMapping("+reload_weapon", "Ricarica Arma", "keyboard", "r")
 
+WeaponCarryied = {}
+
+
+
+function Weapon.carryWeapon(item, sideCarry)
+    local ped = PlayerPedId()
+    local weaponData = CarryData[item.itemName]
+
+    if not weaponData or not weaponData.ModelHash then return end
+
+    local weaponModel = weaponData.ModelHash
+    local playerCoords = GetEntityCoords(ped)
+
+
+    if WeaponCarryied[weaponModel] then
+        if WeaponCarryied[weaponModel].inserted and WeaponCarryied[weaponModel].side == sideCarry then
+            if weaponData.animInsert then
+                PlayCarryWeaponAnimation(ped, weaponData.animInsert.Dict, weaponData.animInsert.Clip)
+            end
+            Wait(100)
+            if WeaponCarryied[weaponModel].entity then
+                DeleteEntity(WeaponCarryied[weaponModel].entity)
+            end
+            WeaponCarryied[weaponModel] = nil
+            LocalPlayer.state:set("isCarryWeapon", false, true)
+            return
+        else
+            if WeaponCarryied[weaponModel].entity then
+                DeleteEntity(WeaponCarryied[weaponModel].entity)
+            end
+            WeaponCarryied[weaponModel] = nil
+        end
+    end
+
+
+    if weaponData.animInsert then
+        PlayCarryWeaponAnimation(ped, weaponData.animInsert.Dict, weaponData.animInsert.Clip)
+    end
+
+    Wait(100)
+
+    local model = Functions.requestModel(weaponModel)
+    WeaponCarryied[weaponModel] = {
+        entity = CreateObject(model, playerCoords.x, playerCoords.y, playerCoords.z, true, false, false),
+        inserted = true,
+        side = sideCarry
+    }
+
+    SetEntityCollision(WeaponCarryied[weaponModel].entity, false, false)
+
+    local carryData = weaponData[sideCarry]
+    if carryData then
+        AttachEntityToEntity(
+            WeaponCarryied[weaponModel].entity, ped, GetPedBoneIndex(ped, carryData.bone),
+            carryData.pos.x, carryData.pos.y, carryData.pos.z,
+            carryData.rot.x, carryData.rot.y, carryData.rot.z,
+            false, true, true, true, 0, true
+        )
+        LocalPlayer.state:set("isCarryWeapon", true, true)
+    end
+end
+
+function PlayCarryWeaponAnimation(ped, dict, clip)
+    if not DoesEntityExist(ped) then return end
+    Functions.requestAnim(dict)
+    if not dict or not clip then return end
+    TaskPlayAnim(ped, dict, clip, 8.0, 8.0, -1, 1, 0, false, false, false)
+    Wait(900)
+    RemoveAnimDict(dict)
+    ClearPedTasks(ped)
+end
+
+function Weapon.DisarmCarry()
+    for weaponModel, weapon in pairs(WeaponCarryied) do
+        if weapon.entity then
+            DeleteEntity(weapon.entity)
+        end
+        WeaponCarryied[weaponModel] = nil
+        LocalPlayer.state:set("isCarryWeapon", false, true)
+    end
+end
+
 
 
 
@@ -226,18 +311,6 @@ RegisterKeyMapping("+reload_weapon", "Ricarica Arma", "keyboard", "r")
 --     TriggerServerEvent("LGF_Inventory:weaponThrown", netId, weaponHash)
 --     throwingWeapon = false
 -- end
-
--- AddEventHandler("onResourceStop", function(res)
---     if GetCurrentResourceName() == res then
---         for netId, data in pairs(ThrownWeapons) do
---             if DoesEntityExist(data.entity) then
---                 DeleteEntity(data.entity)
---             end
---         end
---         ThrownWeapons = {}
---     end
--- end)
-
 
 -- RegisterCommand("throwWeapon", function()
 --     Weapon.ThrowWeapon()

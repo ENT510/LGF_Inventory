@@ -48,7 +48,7 @@ end
 function Shared.nearbyPlayers(startCoords, maxDistance)
     local nearbyPlayers = {}
     local players = GetActivePlayers()
-    local count = 0
+    local nearbyCount = 0
     maxDistance = maxDistance or 2.0
 
     for i = 1, #players do
@@ -58,9 +58,12 @@ function Shared.nearbyPlayers(startCoords, maxDistance)
         if playerCoords then
             local distance = #(startCoords - playerCoords)
             if distance <= maxDistance then
-                count = count + 1
-                nearbyPlayers[count] = { playerId = serverId, playerDistance = distance, playerPed = GetPlayerPed(
-                playerId) }
+                nearbyCount = nearbyCount + 1
+                nearbyPlayers[nearbyCount] = {
+                    playerId = serverId,
+                    playerDistance = distance,
+                    playerPed = GetPlayerPed(playerId)
+                }
             end
         end
     end

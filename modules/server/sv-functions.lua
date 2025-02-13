@@ -42,11 +42,13 @@ function Functions.getInventory(target)
     local query = Query["getInventory"]
     local result
 
+
     if charId ~= nil then
         result = MySQL.query.await(query, { identifier, charId })
     else
         result = MySQL.query.await(query, { identifier })
     end
+
 
     if result and result[1] then
         local playerInventory = result[1].playerInventory

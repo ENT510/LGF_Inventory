@@ -357,14 +357,15 @@ end
 --- @param load boolean Whether to load or unload the inventory (true to load, false to unload)
 function Inventory.loadInventory(target, load)
     local playerId = target
+
     if load == true then
         local inventory = Functions.getInventory(playerId)
-        SetTimeout(1000, function()
+
+        SetTimeout(2000, function()
             TriggerClientEvent("LGF_Inventory:SyncTablePlayer", -1, playerId, inventory)
             local charId = Framework.getCharId(playerId)
             CurrentCharId[playerId] = charId
         end)
-        
     elseif load == false then
         if PlayerInventory[playerId] then
             Functions.updateInventory(playerId, PlayerInventory[playerId])

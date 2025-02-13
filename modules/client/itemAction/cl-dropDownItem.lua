@@ -21,13 +21,19 @@ function Action.handleItemAction(data)
 
     if actionType == "use" and item.itemType == "weapon" then
         if item.closeOnUse then Client.closeInv() end
-
         Weapon.ToggleWeapon(item)
+        Weapon.DisarmCarry()
         return
     end
 
 
-    print(json.encode(data, { indent = true }))
+    if actionType == "carryFront" or actionType == "carryBack" and item.itemType == "weapon" then
+        if isArmed then
+            Weapon.DisarmWeapon()
+        end
+        Weapon.carryWeapon(item, actionType)
+    end
+
 
 
     if actionType == "transfer" and data.typeInventory == "dumpster" then
@@ -50,7 +56,7 @@ function Action.handleItemAction(data)
 
 
     if actionType == "give" then
-        if data.item.itemType == "weapon" and isArmed then Weapon.DisarmWeapon() end
+        if data.item.itemType == "weapon" and isArmed then Weapon.DisarmWeapon() Weapon.DisarmCarry() end
         Client.closeInv()
         Client.openPlayerList(true, data.item.itemName, quantityToRemove, data.item.slot, data.item.metadata)
     elseif actionType == "use" then
@@ -62,8 +68,15 @@ function Action.handleItemAction(data)
         local Prop = Init.Convar.Client.DROP_OBJECT_MODEL
         Client.closeInv()
 
-        if data.item.itemType == "weapon" and isArmed then Weapon.DisarmWeapon() end
+ 
 
+        if data.item.itemType == "weapon" and isArmed then Weapon.DisarmWeapon()   end
+
+
+        if LocalPlayer.state.isCarryWeapon then
+            Weapon.DisarmCarry() 
+        end
+        
         local closestObj = GetClosestObjectOfType(coords.x, coords.y, coords.z, 1.5, Prop, false, false, false)
         if DoesEntityExist(closestObj) then coords = GetOffsetFromEntityInWorldCoords(ped, 0.0, 2.0, 0.0) end
 

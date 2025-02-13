@@ -16,7 +16,7 @@ local confiscatedStates = {}
 
 function Client.openInventory(data)
     if confiscatedStates[GetPlayerServerId(PlayerId())] then
-        Shared.notification("Inventory Confiscated", "Your inventory has been confiscated.", "warning")
+        Shared.notification("Inventory Confiscated", "Your inventory has been confiscated.", "error")
         return
     end
 
@@ -143,6 +143,9 @@ AddEventHandler("onResourceStop", function(res)
         if isArmed then
             RemoveAllPedWeapons(PlayerPedId(), true)
         end
+        if LocalPlayer.state.isCarryWeapon then
+            Weapon.DisarmCarry()
+        end
     end
 end)
 
@@ -152,6 +155,7 @@ end)
 RegisterNetEvent("LGF_Inventory:SyncTablePlayer", function(targetInventory, inventory, isConfiscated)
     confiscatedStates[targetInventory] = isConfiscated or false
 
+    print(json.encode(inventory,{indent = true}))
 
     if type(inventory) ~= "table" then
         inventory = {}
@@ -202,8 +206,6 @@ local function registerInventoryToggle()
             local sourceJob = Framework.getPlayerJobLabel()
 
 
-            print(sourceJob)
-
             Client.currentItems = Client.PlayerInventory
 
             local canOpen, reason = Functions.canOpenInventory()
@@ -236,6 +238,21 @@ local function registerInventoryToggle()
         Init.Convar.Client.INVENTORY_TOGGLE_KEY
     )
 end
+
+AddEventHandler('gameEventTriggered', function(name, args)
+    SetTimeout(500, function()
+        if name == "CEventNetworkEntityDamage" then
+            if Config.isPlayerDead() == true then
+                if LocalPlayer.state.playerListIsOpen then
+                    Client.toggleHotbar(false)
+                end
+                if LocalPlayer.state.invIsOpen then
+                    Client.closeInv()
+                end
+            end
+        end
+    end)
+end)
 
 
 
