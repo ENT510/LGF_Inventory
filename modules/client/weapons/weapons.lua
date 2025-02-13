@@ -43,7 +43,11 @@ function Weapon.EquipWeapon(itemData)
 
         SetPedAmmo(ped, weaponHash, math.min(GetWeaponClipSize(weaponHash), currentAmmo))
 
-        TriggerEvent('LGF_Inventory:weapon:CurrentWeapon', GetSelectedPedWeapon(ped))
+        TriggerEvent('LGF_Inventory:weapon:CurrentWeapon', {
+            itemData = itemData,
+            weaponHash = weaponHash,
+            currentAmmo = currentAmmo
+        })
     end)
 
     return weaponHash
@@ -52,12 +56,16 @@ end
 function Weapon.ToggleWeapon(itemData)
     local ped = PlayerPedId()
     local weaponHash = GetHashKey(itemData.itemName)
-    local currentWeapon = GetSelectedPedWeapon(ped)
+    local isEquipped = GetSelectedPedWeapon(ped) == weaponHash
 
-    if currentWeapon == weaponHash then
+    if isEquipped then
         Weapon.DisarmWeapon()
     else
         Weapon.EquipWeapon(itemData)
+    end
+
+    if Init.Convar.Client.ENABLE_AMMO_CHARGERDUI then
+        WeaponsDui.showAmmoCharger(not isEquipped)
     end
 end
 
@@ -105,6 +113,12 @@ function Weapon.ReloadWeapon()
         Wait(500)
         SetPedAmmo(ped, currentWeapon, ammoInWeapon + ammoNeeded)
         local success = lib.callback.await('LGF_Inventory:removeAmmo', true, ammoType, ammoNeeded)
+
+        WeaponsDui.updateAmmoCharger({
+            CurrentAmmo = ammoInWeapon + ammoNeeded,
+            MaxAmmo = clipSize,
+            WeaponLabel = DataEquiped.itemLabel
+        })
     end
 end
 
@@ -255,9 +269,6 @@ function Weapon.DisarmCarry()
     end
 end
 
-
-
-
 -- local ThrownWeapons = {}
 
 -- local throwingWeapon = false
@@ -317,6 +328,7 @@ end
 -- end, false)
 
 -- RegisterKeyMapping("throwWeapon", "Lancia Arma", "keyboard", "g")
+
 
 
 exports("disarmWeapon", Weapon.DisarmWeapon)
