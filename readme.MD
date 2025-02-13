@@ -6,10 +6,7 @@
 
 Add the following lines to your `server.cfg` to configure the inventory system.
 
----
-##  **ConVar Settings**
-
-###  Shared ConVars (Client & Server)
+## Shared ConVars (Client & Server)
 ```cfg
 # Max inventory slots per player
 set lgf_inventory:maxSlotInv 10
@@ -24,7 +21,7 @@ set lgf_inventory:enableDebug 1
 set lgf_inventory:randomDropDumpsters 1
 ```
 
-###  Client-side ConVars
+## Client-side ConVars
 
 ```cfg
 # Enable screen blur effect (1 = Yes, 0 = No)
@@ -46,14 +43,14 @@ set lgf_inventory:inventoryKey "f3"
 set lgf_inventory:enableAmmoChargerDui 1
 ```
 
-###  Server-side ConVars
+## Server-side ConVars
 
 ```cfg
 # Inventory data save interval (seconds) <300 = 5min>
 set lgf_inventory:save_interval 120
 ```
 
-## Server Exports
+# Server Exports
 
 ```lua
 --- Retrieves the count of a specific item in a player's inventory.
