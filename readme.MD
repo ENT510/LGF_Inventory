@@ -2,6 +2,17 @@
 
 ![inv](https://i.ibb.co/JFvgCMQT/image.png) 
 
+## Features
+
+- **Support Clothing Items** – Supports equipping clothing to designated body slots.  
+- **Support Weapon Carry** – Allows carrying and managing weapons.  
+- **Support Networked Dumpsters Loot** – Enables looting from shared dumpsters across the network.  
+- **Item Stored With Metadata** – Items retain custom data such as condition, properties, and unique attributes.  
+- **Drop Loots Object** – Allows players to drop items on the ground for others to pick up.  
+- **Full Synced** – Ensures full synchronization of inventory data between client and server.  
+- **Dui Ammo Charger** – Provides an advanced DUI for managing and reloading ammunition.  
+- **Hotbar Items** – Quick-access hotbar. 
+
 # ConVar Configuration
 
 ## How to Use
