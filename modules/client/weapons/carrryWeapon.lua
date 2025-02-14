@@ -14,7 +14,8 @@ CarryData = {
         animInsert = {
             Dict = "anim@heists@ornate_bank@grab_cash",
             Clip = "intro"
-        }
+        },
+        canRun = true,
     },
     ["WEAPON_PISTOL_MK2"] = {
         ModelHash = "w_pi_pistolmk2",
@@ -31,6 +32,7 @@ CarryData = {
         animInsert = {
             Dict = "reaction@intimidation@cop@unarmed",
             Clip = "intro"
-        }
+        },
+        canRun = false,
     }
 }

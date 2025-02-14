@@ -124,11 +124,8 @@ end
 
 AddEventHandler('CEventGunShot', function(_, ped)
     if IsPedCurrentWeaponSilenced(PlayerPedId()) then return end
-
     local currentWeapon = GetSelectedPedWeapon(ped)
     local ammoInWeapon = GetAmmoInPedWeapon(ped, currentWeapon)
-
-
     TriggerEvent('LGF_Inventory:isPedShooting', DataEquiped.itemLabel, ammoInWeapon, DataEquiped.itemName,
         DataEquiped.typeAmmo, DataEquiped.metadata.Serial)
 end)
@@ -169,7 +166,9 @@ function Weapon.DisarmWeapon()
         RemoveWeaponFromPed(ped, currentWeapon)
         ClearPedSecondaryTask(ped)
         SetPedAmmo(ped, currentWeapon, 0)
-
+        EnableControlAction(1, 140, true)
+        EnableControlAction(1, 141, true)
+        EnableControlAction(1, 142, true)
         DataEquiped = {}
 
         TriggerEvent('LGF_Inventory:weapon:CurrentWeapon', nil)
@@ -200,7 +199,6 @@ function Weapon.carryWeapon(item, sideCarry)
     local weaponModel = weaponData.ModelHash
     local playerCoords = GetEntityCoords(ped)
 
-
     if WeaponCarryied[weaponModel] then
         if WeaponCarryied[weaponModel].inserted and WeaponCarryied[weaponModel].side == sideCarry then
             if weaponData.animInsert then
@@ -212,6 +210,10 @@ function Weapon.carryWeapon(item, sideCarry)
             end
             WeaponCarryied[weaponModel] = nil
             LocalPlayer.state:set("isCarryWeapon", false, true)
+
+            if weaponData.canRun == false then
+                EnableControlAction(0, 21, true)
+            end
             return
         else
             if WeaponCarryied[weaponModel].entity then
@@ -227,6 +229,7 @@ function Weapon.carryWeapon(item, sideCarry)
     end
 
     Wait(100)
+
 
     local model = Functions.requestModel(weaponModel)
     WeaponCarryied[weaponModel] = {
@@ -246,7 +249,29 @@ function Weapon.carryWeapon(item, sideCarry)
             false, true, true, true, 0, true
         )
         LocalPlayer.state:set("isCarryWeapon", true, true)
+
+        if weaponData.canRun == false then
+            CreateThread(function()
+                while WeaponCarryied[weaponModel] do
+                    DisableControlAction(0, 21, true)
+                    Wait(0)
+                end
+            end)
+        end
     end
+end
+
+function Weapon.DisarmCarry()
+    for weaponModel, weapon in pairs(WeaponCarryied) do
+        if weapon.entity then
+            DeleteEntity(weapon.entity)
+        end
+        WeaponCarryied[weaponModel] = nil
+    end
+
+
+    EnableControlAction(0, 21, true)
+    LocalPlayer.state:set("isCarryWeapon", false, true)
 end
 
 function PlayCarryWeaponAnimation(ped, dict, clip)
@@ -257,16 +282,6 @@ function PlayCarryWeaponAnimation(ped, dict, clip)
     Wait(900)
     RemoveAnimDict(dict)
     ClearPedTasks(ped)
-end
-
-function Weapon.DisarmCarry()
-    for weaponModel, weapon in pairs(WeaponCarryied) do
-        if weapon.entity then
-            DeleteEntity(weapon.entity)
-        end
-        WeaponCarryied[weaponModel] = nil
-        LocalPlayer.state:set("isCarryWeapon", false, true)
-    end
 end
 
 -- local ThrownWeapons = {}
@@ -333,3 +348,4 @@ end
 
 exports("disarmWeapon", Weapon.DisarmWeapon)
 exports("getWheelState", Weapon.getWheelState)
+exports("isCarryWeapon", function() return LocalPlayer.state.isCarryWeapon end)

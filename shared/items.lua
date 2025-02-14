@@ -7,7 +7,6 @@ return {
         itemRarity = "uncommon",
         description = "A high-quality water bottle to keep you hydrated during your adventures.",
         closeOnUse = true,
-
     },
     ["burger"] = {
         itemLabel = "Burger",
@@ -55,9 +54,12 @@ return {
         description = "A stylish hat for outdoor adventures.",
         closeOnUse = false,
         metadata = {
-            maleDrawableId = 45
+            componentId = 0,
+            maleDrawableId = 45,
+            femaleDrawableId = 50,
         }
     },
+    
     ["clothing_pants"] = {
         itemLabel = "Pants",
         itemWeight = 1.0,
@@ -68,11 +70,12 @@ return {
         description = "Durable pants, perfect for outdoor work and exploration.",
         closeOnUse = false,
         metadata = {
+            componentId = 4, 
             maleDrawableId = 3,
             femaleDrawableId = 3,
         }
-
     },
+    
     ["clothing_shoes"] = {
         itemLabel = "Sneakers",
         itemWeight = 0.8,
@@ -83,26 +86,28 @@ return {
         closeOnUse = false,
         usable = false,
         metadata = {
+            componentId = 6, 
             maleDrawableId = 7,
             femaleDrawableId = 2,
         }
-
     },
+    
     ["clothing_jacket"] = {
         itemLabel = "Felp Jacket",
         itemWeight = 1.2,
         itemType = "item",
         stackable = false,
         itemRarity = "rare",
-        description = "A warm  jacket to keep you comfortable in cold climates.",
+        description = "A warm jacket to keep you comfortable in cold climates.",
         closeOnUse = false,
         usable = false,
         metadata = {
+            componentId = 11,
             maleDrawableId = 7,
             femaleDrawableId = 7,
         }
-
     },
+    
     ["clothing_backpack"] = {
         itemLabel = "Backpack",
         itemWeight = 5.0,
@@ -113,10 +118,12 @@ return {
         closeOnUse = false,
         usable = false,
         metadata = {
+            componentId = 5, 
             maleDrawableId = 5,
             femaleDrawableId = 5,
         }
     },
+    
     ["money"] = {
         itemLabel = "Money",
         itemWeight = 0.0,

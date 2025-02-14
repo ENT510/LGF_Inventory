@@ -7,8 +7,17 @@ local enableDebug = Init.Convar.Shared.ENABLE_DEBUG_INVENTORY
 Dumpst = {}
 
 Dumpsters = {
-    PropHash = { 218085040, 666561306, -58485588, -206690185, 1511880420, 682791951 }
+    PropHash = {
+        218085040,
+        666561306,
+        -58485588,
+        -206690185,
+        1511880420,
+        682791951
+    }
 }
+
+
 Dumpsters.HashSet = {}
 for _, model in ipairs(Dumpsters.PropHash) do
     Dumpsters.HashSet[model] = true

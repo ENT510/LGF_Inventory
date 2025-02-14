@@ -49,9 +49,10 @@ local function syncClonedPed()
 end
 
 
-local function toggleComponent(drawableId, itemName, isProp)
+local function toggleComponent(drawableId, componentId, itemName, isProp)
     local ped = PlayerPedId()
     local animData = ReferenceAnim[itemName]
+    local gender = getFreemode(ped)
 
     if animData then
         Functions.requestAnim(animData.dict)
@@ -64,27 +65,18 @@ local function toggleComponent(drawableId, itemName, isProp)
 
     if isProp then
         if wornItems[itemName] then
-            ClearPedProp(ped, 0)
+            ClearPedProp(ped, componentId)
             wornItems[itemName] = nil
         else
-            SetPedPropIndex(ped, 0, drawableId, 0, true)
+            SetPedPropIndex(ped, componentId, drawableId, 0, true)
             wornItems[itemName] = true
         end
     else
-        local componentId = 5
-        if itemName == "clothing_jacket" then
-            componentId = 11
-        elseif itemName == "clothing_pants" then
-            componentId = 4
-        elseif itemName == "clothing_shoes" then
-            componentId = 6
-        end
-
         if wornItems[itemName] then
-            if itemName == "clothing_pants" then
+            if componentId == 6 then
+                SetPedComponentVariation(ped, componentId, (gender == "m") and 34 or 35, 0, 0) -- Not sure for female
+            elseif componentId == 4 then
                 SetPedComponentVariation(ped, componentId, 14, 0, 0)
-            elseif itemName == "clothing_shoes" then
-                SetPedComponentVariation(ped, componentId, 34, 0, 0)
             else
                 SetPedComponentVariation(ped, componentId, 0, 0, 0)
             end
@@ -106,16 +98,18 @@ RegisterNuiCallback("LGF_Inventory:FetchItemBodyRemoved", function(data, cb)
 
     if Items[data.itemName] and Items[data.itemName].metadata then
         local Drawable = (gender == "m") and Items[data.itemName].metadata.maleDrawableId or
-            Items[data.itemName].metadata.femaleDrawableId
+        Items[data.itemName].metadata.femaleDrawableId
+        local Component = Items[data.itemName].metadata.componentId
+        local isProp = (Component == 0)
 
-        if Drawable then
-            local isProp = (data.itemName == "clothing_hat")
-            toggleComponent(Drawable, data.itemName, isProp)
+        if Drawable and Component then
+            toggleComponent(Drawable, Component, data.itemName, isProp)
         end
     end
 
     cb(true)
 end)
+
 
 
 function GetWornItems()

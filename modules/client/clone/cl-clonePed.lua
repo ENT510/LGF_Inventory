@@ -16,6 +16,7 @@ function CreatePedScreen(ped)
         ReplaceHudColourWithRgba(117, 0, 0, 0, 0)
         NetworkSetEntityInvisibleToNetwork(ClonedPed, false)
         Wait(200)
+        -- Not Sure why SetMouseCursorVisible work not every time
 
         SetMouseCursorVisible(false)
         GivePedToPauseMenu(ClonedPed, 2)
@@ -23,7 +24,6 @@ function CreatePedScreen(ped)
         SetPauseMenuPedSleepState(false)
         Wait(1000)
         SetPauseMenuPedSleepState(true)
-
     end)
 end
 
