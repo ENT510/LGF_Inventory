@@ -33,4 +33,3 @@ else
     }
 end
 
-Legacy = exports.LEGACYCORE:GetCoreData()
